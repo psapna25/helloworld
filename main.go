@@ -2,13 +2,21 @@ package main
 
 import (
     "fmt"
-    "time"
+    "html"
+    "log"
+    "net/http"
 )
-func helloworld() string {
-	return "Hello World!!"
-}
 
 func main() {
-	fmt.Println(helloworld())
-	time.Sleep(600 * time.Second)
+
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+    })
+
+    http.HandleFunc("/hi", func(w http.ResponseWriter, r *http.Request){
+        fmt.Fprintf(w, "Hi")
+    })
+
+    log.Fatal(http.ListenAndServe(":8080", nil))
+
 }
